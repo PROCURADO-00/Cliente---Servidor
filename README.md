@@ -1,7 +1,7 @@
 # Cliente👱🏻‍♂️---Servidor💻
 # Aplicação de Cliente-Servidor TCP para Cálculo de Expressões Matemáticas
 
-GRUPO👨🏻‍💻👩🏻‍💻 autores : João marcos , Jaime werick , Tedy monteiro , Valkiria
+GRUPO👨🏻‍💻👩🏻‍💻 autores : João marcos , Jaime werick , Tedy monteiro , 
 ```
 README.md
 ```

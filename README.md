@@ -1,6 +1,3 @@
-```
-README.md
-```
 
 ```
 # Aplicação de Cliente-Servidor TCP para Cálculo de Expressões Matemáticas

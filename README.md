@@ -1,84 +1,93 @@
-import socket
-import re
 
-# Configurações do Servidor
-HOST = '127.0.0.1'
-PORT = 12345
+# Aplicação de Cliente-Servidor TCP para Cálculo de Expressões Matemáticas
 
-def calcular(expressao):
-    try:
-        expressao = expressao.replace(" ", "")
-        if not re.match(r'^[\d\+\-\*/\(\)\.]+$', expressao):
-            raise ValueError("Expressão inválida: Caracteres não permitidos.")
-        resultado = eval(expressao)
-        return resultado
-    except ZeroDivisionError:
-        raise ValueError("Erro: Divisão por zero.")
-    except Exception as e:
-        raise ValueError(f"Expressão inválida: {e}")
+## Linguagem Utilizada
 
-def iniciar_servidor():
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind((HOST, PORT))
-        s.listen()
-        print(f"Servidor ouvindo em {HOST}:{PORT}")
+Esta aplicação foi desenvolvida em **Python**. Python é uma linguagem de programação de alto nível, interpretada e de fácil aprendizado, amplamente utilizada para desenvolvimento de aplicações de rede, automação, ciência de dados, entre outros.
 
-        while True:
-            conn, addr = s.accept()
-            with conn:
-                print(f"Conectado por {addr}")
-                while True:
-                    try:
-                        data = conn.recv(1024)
-                        if not data:
-                            print("Cliente desconectado.")
-                            break
-                        mensagem = data.decode('utf-8')
-                        print(f"Recebido de {addr}: {mensagem}")
+## Modelo de Comunicação Adotado
 
-                        # Processa a mensagem
-                        msg_lower = mensagem.strip().lower()
-                        if msg_lower.startswith("calcular "):
-                            expressao = mensagem[len("calcular "):].strip()  # Extrai a expressão
-                            try:
-                                resultado = calcular(expressao)
-                                resposta = f"Resultado: {resultado}".encode('utf-8')
-                            except ValueError as e:
-                                resposta = f"Erro: {e}".encode('utf-8')
-                        else:
-                            resposta = f"Mensagem recebida: {mensagem}".encode('utf-8')
+O modelo de comunicação utilizado é o **modelo Cliente-Servidor** utilizando sockets TCP/IP.
 
-                        # Envia a resposta de volta para o cliente
-                        conn.sendall(resposta)
-                    except ConnectionResetError:
-                        print(f"Conexão com {addr} foi resetada.")
-                        break
-                    except Exception as e:
-                        print(f"Erro ao lidar com a conexão: {e}")
-                        break
+- **Servidor TCP**: Escuta conexões em um endereço IP e porta específicos, aceita conexões de clientes e processa as solicitações recebidas.
+- **Cliente TCP**: Conecta-se ao servidor usando o endereço IP e porta especificados, envia mensagens (comandos ou expressões matemáticas) e recebe respostas do servidor.
 
-def iniciar_cliente():
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect((HOST, PORT))
-        print(f"Conectado ao servidor em {HOST}:{PORT}")
+Essa comunicação é orientada a conexão, garantindo a entrega confiável dos dados entre cliente e servidor.
 
-        while True:
-            mensagem = input("Digite sua mensagem (ou 'calcular <expressão>', ou 'sair'): ")
-            if mensagem.lower() == 'sair':
-                break
-            s.sendall(mensagem.encode('utf-8'))
-            data = s.recv(1024)
-            resposta = data.decode('utf-8')
-            print(f"Recebido do servidor: {resposta}")
+## Como Executar e Testar a Aplicação
 
-if __name__ == "__main__":
-    while True:
-        escolha = input("Deseja iniciar o servidor (s) ou o cliente (c)? ").lower()
-        if escolha == 's':
-            iniciar_servidor()
-            break
-        elif escolha == 'c':
-            iniciar_cliente()
-            break
-        else:
-            print("Opção inválida. Por favor, digite 's' ou 'c'.")
+### Pré-requisitos
+
+- Python 3 instalado na máquina.
+- Acesso ao terminal ou prompt de comando.
+
+### Passos para Executar
+
+1. **Salvar o código**
+
+   Salve o código Python fornecido anteriormente em um arquivo chamado, por exemplo, `socket_calc.py`.
+
+2. **Abrir dois terminais**
+
+   Abra duas janelas de terminal ou prompt de comando: uma será usada para executar o servidor, outra para o cliente.
+
+3. **Iniciar o Servidor**
+
+   Na primeira janela de terminal, navegue até o diretório onde está o arquivo `socket_calc.py` e execute:
+
+   ```bash
+   python socket_calc.py
+ou em sistemas onde o Python 3 é chamado com python3:
+
+festança
+Correr
+Copiar código
+python3 socket_calc.py
+Quando solicitado, digite spara iniciar o servidor.
+
+Iniciar o Cliente
+
+Na segunda janela do terminal, navegue para o mesmo diretório e execute:
+
+festança
+Correr
+Copiar código
+python socket_calc.py
+ou
+
+festança
+Correr
+Copiar código
+python3 socket_calc.py
+Quando solicitado, digite cpara iniciar o cliente.
+
+Usar o aplicativo
+
+No terminal do cliente, digite comandos para se comunicar com o servidor:
+
+Para realizar um cálculo, use o comando calcularseguido da expressão matemática. Exemplo:
+
+Correr
+Copiar código
+calcular 5 + 3 * (2 - 1)
+Para enviar mensagens simples ao servidor:
+
+Correr
+Copiar código
+Olá, servidor!
+Para encerrar o cliente, digite:
+
+Correr
+Copiar código
+sair
+Visualizar Resposta
+
+Na janela do cliente, a resposta do servidor será exibida logo após o envio da mensagem.
+
+No terminal do servidor, você verá logs decrescentes nas conexões e mensagens recebidas.
+
+Observações
+O servidor deve estar sempre ativo antes que o cliente tente se conectar.
+A aplicação realiza a validação básica das expressões matemáticas para evitar execuções inseguras.
+Atualmente, o aplicativo suporta operações aritméticas básicas: adição, subtração, multiplicação e divisão, incluindo o uso de parênteses e números decimais.
+Com esses passos, é possível executar e testar um aplicativo cliente-servidor para cálculo de expressões matemáticas via TCP.
